@@ -1,0 +1,54 @@
+########################################################################################################################
+Install New Environemt: 
+https://stackoverflow.com/questions/41060382/using-pip-to-install-packages-to-anaconda-environment
+########################################################################################################################
+
+conda create --name maskrcnn python=3.7
+conda activate maskrcnn
+conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1.0
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/
+mkdir -p $CONDA_PREFIX/etc/conda/activate.d
+echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/' > $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+
+########################################################################################################################
+# Download CUDA libraries for tensorflow 2.0.0 and put into conda environment
+# https://www.tensorflow.org/install/source#gpu
+########################################################################################################################
+/home/<user>/miniconda3/envs/test/lib/
+	libcudart.so.10.0
+	libcublas.so.10.0
+	libcufft.so.10.0
+	libcurand.so.10.0
+	libcusolver.so.10.0
+	libcusparse.so.10.0
+	libcudnn.so.7
+move lib* into conda environment.
+########################################################################################################################
+# Install All requirements
+conda install pip
+$CONDA_PREFIX/bin/pip install -r requirements.txt
+
+########################################################################################################################
+# Download the following from:
+https://www.kaggle.com/competitions/rsna-pneumonia-detection-challenge/data
+into data directory
+
+1) stage_2_test_images 
+2) stage_2_train_images 
+3) train.text
+
+########################################################################################################################
+# To train model
+cd /transfer-learning/
+$CONDA_PREFIX/bin/python pneumonia_training.py
+
+
+########################################################################################################################
+# To validate model
+cd /transfer-learning/
+$CONDA_PREFIX/bin/python pneumonia_validation.py 
+
+########################################################################################################################
+# Remove environment
+conda env list
+conda remove --name maskrcnn --all
